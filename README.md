@@ -61,41 +61,6 @@ A comprehensive network security monitoring dashboard that combines machine lear
 - **Storage**: SSD with 10+ GB free space
 - **GPU**: CUDA-compatible GPU (optional, for faster ML processing)
 
-## 📁 Project Structure
-
-```
-IDSP-Network-Dashboard/
-├── app.py                          # Main Flask application
-├── config.py                       # Configuration settings
-├── README.md                       # Project documentation
-├── requirements.txt                # Python dependencies (to be created)
-├── __pycache__/                    # Python cache files
-│   └── config.cpython-312.pyc
-├── models/                         # Pre-trained ML models
-│   ├── anomaly_scaler.pkl          # Anomaly detection scaler
-│   ├── attack_feature_scaler.pkl   # Attack classification scaler
-│   ├── attack_label_encoder.pkl    # Attack type label encoder
-│   ├── autoencoder_model.h5        # Autoencoder for anomaly detection
-│   ├── cnn_lstm_model.keras        # CNN-LSTM hybrid model
-│   ├── ensemble_voting_model.pkl   # Ensemble voting classifier
-│   ├── isolation_forest_model.pkl  # Isolation Forest model
-│   ├── label_encoder.pkl           # General label encoder
-│   └── xgboost_attack_classifier_weighted.pkl # XGBoost classifier
-├── static/                         # Static web assets
-│   ├── css/
-│   │   └── styles.css              # Custom CSS styles
-│   ├── img/                        # Image assets
-│   └── js/
-│       └── scripts.js              # JavaScript functionality
-├── templates/                      # HTML templates
-│   ├── base.html                   # Base template
-│   ├── dashboard.html              # Main dashboard
-│   └── logs.html                   # Logs viewer
-└── testing/                        # Testing and automation scripts
-    ├── automate_mitigation_loop.py # Automated mitigation testing
-    └── automate_mitigation.py      # Mitigation automation
-```
-
 ## 🚀 Installation & Setup
 
 ### Step 1: Clone the Repository
