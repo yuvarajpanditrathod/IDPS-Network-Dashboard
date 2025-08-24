@@ -120,11 +120,7 @@ source venv/bin/activate
 ### Step 4: Install Python Dependencies
 
 ```bash
-pip install flask pymongo flask-pymongo python-dotenv
-pip install pandas numpy matplotlib plotly
-pip install tensorflow torch torchvision
-pip install scikit-learn xgboost joblib
-pip install psutil
+pip install -r requirements.txt
 ```
 
 ### Step 5: Run the Application
