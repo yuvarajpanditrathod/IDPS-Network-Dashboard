@@ -1,6 +1,12 @@
-# IDPS Network Dashboard
-
 ## 🛡️ Intrusion Detection & Prevention System (IDPS) Network Dashboard
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)](https://www.python.org/) 
+[![Flask](https://img.shields.io/badge/Flask-WebApp-black?logo=flask&logoColor=white)](https://flask.palletsprojects.com/) 
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-Frontend-purple?logo=bootstrap&logoColor=white)](https://getbootstrap.com/) 
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
+[![CSS3](https://img.shields.io/badge/CSS3-Styles-blue?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS) 
+[![HTML5](https://img.shields.io/badge/HTML5-Templates-orange?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML) 
+[![Security](https://img.shields.io/badge/IDPS-Security-critical?logo=datadog&logoColor=white)](https://en.wikipedia.org/wiki/Intrusion_detection_system) 
+[![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/yuvarajpanditrathod/IDPS-Network-Dashboard)
 
 A comprehensive network security monitoring dashboard that combines machine learning-based intrusion detection with real-time network monitoring capabilities. This system provides automated threat detection, anomaly analysis, and network traffic visualization through an intuitive web interface.
 
