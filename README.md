@@ -142,7 +142,7 @@ The dashboard will be available at: `http://localhost:5000`
 ## 🔧 Configuration
 ## 📑 Reports
 
-A Report (**Report.pdf**) is included in the repository.  
+A Report [Report.pdf](./Report.pdf)   is included in the repository.
 It provides an overview of detected threats, network activity, and mitigation actions. 
 
 ### MongoDB Configuration
