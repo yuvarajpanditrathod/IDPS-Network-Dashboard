@@ -5,6 +5,11 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) 
 [![CSS3](https://img.shields.io/badge/CSS3-Styles-blue?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS) 
 [![HTML5](https://img.shields.io/badge/HTML5-Templates-orange?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML) 
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?logo=mongodb&logoColor=white)](https://www.mongodb.com/) 
+[![Pandas](https://img.shields.io/badge/Data-Pandas-lightgrey?logo=pandas&logoColor=white)](https://pandas.pydata.org/) 
+[![Plotly](https://img.shields.io/badge/Visualization-Plotly-3F4F75?logo=plotly&logoColor=white)](https://plotly.com/python/) 
+[![TensorFlow](https://img.shields.io/badge/ML-TensorFlow-orange?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/) 
+[![PyTorch](https://img.shields.io/badge/DL-PyTorch-red?logo=pytorch&logoColor=white)](https://pytorch.org/) 
 [![Security](https://img.shields.io/badge/IDPS-Security-critical?logo=datadog&logoColor=white)](https://en.wikipedia.org/wiki/Intrusion_detection_system) 
 [![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com/yuvarajpanditrathod/IDPS-Network-Dashboard)
 
