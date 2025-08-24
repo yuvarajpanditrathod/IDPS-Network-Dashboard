@@ -140,6 +140,10 @@ The dashboard will be available at: `http://localhost:5000`
 5. **Automated Response**: The system automatically responds to detected threats
 
 ## 🔧 Configuration
+## 📑 Reports
+
+A Report (**Report.pdf**) is included in the repository.  
+It provides an overview of detected threats, network activity, and mitigation actions. 
 
 ### MongoDB Configuration
 - Default connection: `mongodb://localhost:27017/network_dashboard`
