@@ -1,0 +1,585 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-white">Network Security Dashboard</h1>
+                    <p class="text-muted">Real-time monitoring and threat detection</p>
+                </div>
+                <div class="d-flex">
+                    <div class="btn-group me-2">
+                        <button class="btn btn-outline-info" id="refresh-btn">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                        <a href="{{ url_for('download_logs') }}" class="btn btn-outline-success">
+                            <i class="bi bi-download"></i> Export
+                        </a>
+                    </div>
+                    <div class="ms-2">
+                        <span class="badge bg-success">Live</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card bg-dark-blue border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title text-muted mb-0">TOTAL THREATS</h6>
+                            <h3 class="fw-bold mb-0 text-white">{{ malicious_ips|length }}</h3>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-danger bg-opacity-25 text-danger">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">
+                        <span class="text-danger me-1"><i class="bi bi-arrow-up"></i> 4.3%</span>
+                        <span class="small">from last hour</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-dark-blue border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title text-muted mb-0">CONNECTED DEVICES</h6>
+                            <h3 class="fw-bold mb-0 text-white">{{ connected_ips|length }}</h3>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-success bg-opacity-25 text-success">
+                                <i class="bi bi-pc-display-horizontal"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">
+                        <span class="text-success me-1"><i class="bi bi-arrow-up"></i> 2.1%</span>
+                        <span class="small">from last hour</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-dark-blue border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title text-muted mb-0">BLOCKED ATTACKS</h6>
+                            <h3 class="fw-bold mb-0 text-white">{{ attack_stats.values()|sum }}</h3>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-warning bg-opacity-25 text-warning">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">
+                        <span class="text-success me-1"><i class="bi bi-arrow-down"></i> 8.7%</span>
+                        <span class="small">from last hour</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-dark-blue border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title text-muted mb-0">SYSTEM UPTIME</h6>
+                            <h3 class="fw-bold mb-0 text-white">99.8%</h3>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="stat-icon bg-info bg-opacity-25 text-info">
+                                <i class="bi bi-activity"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2 mb-0">
+                        <span class="text-success me-1"><i class="bi bi-check-circle"></i></span>
+                        <span class="small">All systems normal</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-8">
+            <!-- Attack Statistics Card -->
+            <div class="card bg-dark-blue border-0 mb-4">
+                <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="text-white mb-0"><i class="bi bi-pie-chart me-2"></i>Attack Distribution</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="timeRangeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Last 24 hours
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="timeRangeDropdown">
+                            <li><a class="dropdown-item" href="#">Last hour</a></li>
+                            <li><a class="dropdown-item" href="#">Last 6 hours</a></li>
+                            <li><a class="dropdown-item" href="#">Last 24 hours</a></li>
+                            <li><a class="dropdown-item" href="#">Last 7 days</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="attackChart" style="height: 300px;"></div>
+                </div>
+            </div>
+
+            <!-- Threat Timeline Card -->
+            <div class="card bg-dark-blue border-0 mb-4">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="text-white mb-0"><i class="bi bi-bar-chart me-2"></i>Threat Activity Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div id="timelineChart" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-4">
+            <!-- Threat Level Card -->
+            <div class="card bg-dark-blue border-0 mb-4">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="text-white mb-0"><i class="bi bi-speedometer2 me-2"></i>Current Threat Level</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="gauge-container mb-3">
+                        <div class="gauge" id="threatGauge"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="border rounded p-2 bg-low">
+                                <small class="d-block">LOW</small>
+                                <span class="fw-bold">2</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border rounded p-2 bg-medium">
+                                <small class="d-block">MEDIUM</small>
+                                <span class="fw-bold">5</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border rounded p-2 bg-high">
+                                <small class="d-block">HIGH</small>
+                                <span class="fw-bold">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Threats Card -->
+            <div class="card bg-dark-blue border-0 mb-4">
+                <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="text-white mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Top Active Threats</h5>
+                    <span class="badge bg-danger">{{ malicious_ips|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% for ip in malicious_ips[:5] %}
+                        <div class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-bold">{{ ip.ip }}</span>
+                                <small class="d-block text-muted">{{ ip.attack_type }}</small>
+                            </div>
+                            <span class="badge bg-{% if ip.threat_level == 'high' %}danger{% elif ip.threat_level == 'medium' %}warning{% else %}info{% endif %}">
+                                {{ ip.threat_level|upper }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if malicious_ips|length > 5 %}
+                    <div class="text-center mt-3">
+                        <a href="#" class="btn btn-sm btn-outline-secondary">View All Threats</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IP Addresses Row -->
+    <div class="row">
+        <!-- System IPs Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark-blue border-0 h-100">
+                <div class="card-header bg-transparent border-secondary d-flex justify-content-between align-items-center">
+                    <h5 class="text-white mb-0"><i class="bi bi-pc-display me-2"></i>System IPs</h5>
+                    <span class="badge bg-primary">{{ real_ips|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-borderless table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Interface</th>
+                                    <th>IP Address</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ip in real_ips %}
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-hdd-network-fill text-primary me-2"></i>
+                                        {{ ip.interface }}
+                                    </td>
+                                    <td class="font-monospace">{{ ip.ip }}</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connected IPs Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark-blue border-0 h-100">
+                <div class="card-header bg-transparent border-secondary d-flex justify-content-between align-items-center">
+                    <h5 class="text-white mb-0"><i class="bi bi-diagram-3 me-2"></i>Connected Devices</h5>
+                    <span class="badge bg-success">{{ connected_ips|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-borderless table-hover">
+                            <thead>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Last Seen</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ip in connected_ips %}
+                                <tr>
+                                    <td class="font-monospace">{{ ip.ip }}</td>
+                                    <td>{{ ip.last_seen }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if ip.last_seen == 'Just now' %}success{% else %}warning{% endif %}">
+                                            {% if ip.last_seen == 'Just now' %}Active{% else %}Inactive{% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mitigation Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark-blue border-0 h-100">
+                <div class="card-header bg-transparent border-secondary">
+                    <h5 class="text-white mb-0"><i class="bi bi-shield-exclamation me-2"></i>Threat Mitigation</h5>
+                </div>
+                <div class="card-body">
+                    <form id="mitigation-form">
+                        <div class="mb-3">
+                            <label for="ip_address" class="form-label text-white">IP Address</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" id="ip_address" name="ip_address" placeholder="Enter IP address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="action" class="form-label text-white">Action</label>
+                            <select class="form-select bg-dark border-secondary text-white" id="action" name="action">
+                                <option value="block">Block IP</option>
+                                <option value="allow">Allow IP</option>
+                                <option value="monitor">Monitor Only</option>
+                                <option value="quarantine">Quarantine</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="duration" class="form-label text-white">Duration</label>
+                            <select class="form-select bg-dark border-secondary text-white" id="duration" name="duration">
+                                <option value="1">1 hour</option>
+                                <option value="6">6 hours</option>
+                                <option value="24" selected>24 hours</option>
+                                <option value="permanent">Permanent</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-shield-check"></i> Apply Mitigation
+                        </button>
+                    </form>
+                    <div id="mitigation-result" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Attack Distribution Chart
+        const chartData = {{ attack_chart | safe }};
+        Plotly.newPlot('attackChart', chartData.data, chartData.layout, { responsive: true });
+
+        // Threat Timeline Chart (mock data)
+        const timelineData = [{
+            x: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+            y: [12, 19, 8, 15, 24, 31, 28, 22],
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: '#0dcaf0', width: 3 },
+            marker: { size: 6 },
+            name: 'Threat Count'
+        }];
+        
+        const timelineLayout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#adb5bd' },
+            margin: { t: 30, r: 35, l: 50, b: 40 },
+            xaxis: {
+                gridcolor: 'rgba(255,255,255,0.1)',
+                linecolor: 'rgba(255,255,255,0.2)',
+            },
+            yaxis: {
+                gridcolor: 'rgba(255,255,255,0.1)',
+                linecolor: 'rgba(255,255,255,0.2)',
+            },
+            showlegend: false,
+            hovermode: 'x unified'
+        };
+        
+        Plotly.newPlot('timelineChart', timelineData, timelineLayout);
+
+        // Threat Gauge (mock data)
+        const gaugeData = [{
+            domain: { x: [0, 1], y: [0, 1] },
+            value: 67,
+            title: { text: "Threat Level" },
+            type: "indicator",
+            mode: "gauge+number",
+            gauge: {
+                axis: { range: [null, 100] },
+                steps: [
+                    { range: [0, 40], color: "green" },
+                    { range: [40, 70], color: "orange" },
+                    { range: [70, 100], color: "red" }
+                ],
+                threshold: {
+                    line: { color: "red", width: 4 },
+                    thickness: 0.75,
+                    value: 67
+                }
+            }
+        }];
+        
+        const gaugeLayout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: '#adb5bd' },
+            margin: { t: 50, b: 10, l: 10, r: 10 },
+            height: 200
+        };
+        
+        Plotly.newPlot('threatGauge', gaugeData, gaugeLayout);
+
+        // Mitigation form handling
+        document.getElementById('mitigation-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('{{ url_for("mitigate") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('mitigation-result');
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill"></i> ${data.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-circle-fill"></i> Error: ${data.message || 'Unknown error occurred'}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('mitigation-result').innerHTML = `
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle-fill"></i> Network error occurred. Please try again.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+            });
+        });
+
+        // Refresh button functionality
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Refreshing...';
+            this.disabled = true;
+            
+            fetch('{{ url_for("update_data") }}')
+                .then(response => response.json())
+                .then(data => {
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Refresh';
+                    this.disabled = false;
+                });
+        });
+
+        // Auto-refresh data every 60 seconds
+        setInterval(function() {
+            fetch('{{ url_for("update_data") }}')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data updated', data);
+                    // In a real implementation, you would update specific components instead of reloading
+                });
+        }, 60000);
+    });
+</script>
+
+<style>
+:root {
+    --dark-blue: #0a1930;
+    --darker-blue: #071121;
+    --border-color: #1c2e45;
+}
+
+body {
+    background-color: var(--darker-blue);
+    color: #e9ecef;
+}
+
+.dashboard-container {
+    padding: 20px;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.bg-dark-blue {
+    background-color: var(--dark-blue);
+}
+
+.stat-card {
+    height: 100%;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.table-dark {
+    background-color: transparent;
+}
+
+.table-dark th {
+    border-color: var(--border-color);
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.table-dark td {
+    border-color: var(--border-color);
+    vertical-align: middle;
+}
+
+.bg-low {
+    background-color: rgba(25, 135, 84, 0.2) !important;
+    color: #198754;
+}
+
+.bg-medium {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+    color: #ffc107;
+}
+
+.bg-high {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    color: #dc3545;
+}
+
+.font-monospace {
+    font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+}
+
+.btn {
+    border-radius: 6px;
+}
+
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.list-group-item {
+    transition: background-color 0.15s ease;
+}
+
+.list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dropdown-menu {
+    background-color: var(--dark-blue);
+    border: 1px solid var(--border-color);
+}
+
+.dropdown-item {
+    color: #e9ecef;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #e9ecef;
+}
+</style>
+{% endblock %}
