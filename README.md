@@ -1,6 +1,6 @@
-# IDSP Network Dashboard
+# IDPS Network Dashboard
 
-## 🛡️ Intrusion Detection System & Prevention (IDSP) Network Dashboard
+## 🛡️ Intrusion Detection & Prevention System (IDPS) Network Dashboard
 
 A comprehensive network security monitoring dashboard that combines machine learning-based intrusion detection with real-time network monitoring capabilities. This system provides automated threat detection, anomaly analysis, and network traffic visualization through an intuitive web interface.
 
