@@ -116,16 +116,7 @@ pip install scikit-learn xgboost joblib
 pip install psutil
 ```
 
-### Step 5: Environment Configuration
-
-Create a `.env` file in the project root:
-
-```env
-SECRET_KEY=your-secret-key-here-change-this-in-production
-MONGO_URI=mongodb://localhost:27017/network_dashboard
-```
-
-### Step 6: Run the Application
+### Step 5: Run the Application
 
 ```bash
 python app.py
